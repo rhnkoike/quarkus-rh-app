@@ -11,7 +11,7 @@ public class HelloResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        System.out.println("こんにちは");
+        // System.out.println("こんにちは");
         return "hello";
     }
 }
