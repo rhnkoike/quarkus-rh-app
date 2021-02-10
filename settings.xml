@@ -1,0 +1,49 @@
+<settings>
+  <mirrors>
+  <!--This sends everything else to /public -->
+    <mirror>
+      <id>jboss-enterprise-maven-repository-ga</id>
+      <mirrorOf>jboss-enterprise-maven-repository-ga</mirrorOf>
+      <url>http://nexus3-dev.apps.cluster-tokyo-a5d7.tokyo-a5d7.sandbox139.opentlc.com/repository/rhga/</url>
+    </mirror>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://nexus3-dev.apps.cluster-tokyo-a5d7.tokyo-a5d7.sandbox139.opentlc.com/repository/maven-public/</url>
+    </mirror>
+    
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>jboss-enterprise-maven-repository-ga</id>
+          <url>http://nexus3-dev.apps.cluster-tokyo-a5d7.tokyo-a5d7.sandbox139.opentlc.com/repository/rhga/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <!-- <repository>
+          <id>central</id>
+          <url>http://nexus-dev.apps.cluster-69ac.69ac.sandbox1480.opentlc.com/nexus/content/repositories/central/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository> -->
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>jboss-enterprise-maven-repository-ga</id>
+          <url>http://nexus3-dev.apps.cluster-tokyo-a5d7.tokyo-a5d7.sandbox139.opentlc.com/repository/rhga/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+</settings>
