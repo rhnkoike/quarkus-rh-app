@@ -41,12 +41,12 @@ node('maven') {
 	def version    = getVersionFromPom("pom.xml")
 
 	stage('Build') {
-		if(fileExists("./settings.xml")) {
-			sh "cp ./settings.xml ~/.m2/"
-		}
-		if(fileExists("./settings-security.xml")) {
-			sh "cp ./settings-security.xml ~/.m2/"
-		}
+		// if(fileExists("./settings.xml")) {
+		// 	sh "cp ./settings.xml ~/.m2/"
+		// }
+		// if(fileExists("./settings-security.xml")) {
+		// 	sh "cp ./settings-security.xml ~/.m2/"
+		// }
 
 		echo "Building version ${version}"
 		sh "${mvnCmd} clean compile "
