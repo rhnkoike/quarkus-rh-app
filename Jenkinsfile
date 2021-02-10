@@ -49,7 +49,7 @@ node('maven') {
 		}
 
 		echo "Building version ${version}"
-		// sh "${mvnCmd} clean compile "
+		sh "${mvnCmd} clean compile "
 	}
 
 	stage('Tests') {
@@ -68,16 +68,16 @@ node('maven') {
 		// }
 
 		echo "Unit Tests"
-		// sh "${mvnCmd} test"
+		sh "${mvnCmd} test"
 	}
 
 	def newTag = "dev-${version}"
 
 
-	stage('Deploy to Dev') {
+	stage('Build Image') {
 		
 		echo "Deploy image ${newTag}"
-	// 	// sh "${mvnCmd} clean package -Dquarkus.kubernetes.deploy=true -DskipTests -s ./setting.xml"
+		sh "${mvnCmd} clean package -Dquarkus.kubernetes.deploy=false -DskipTests"
     //     sh "${mvnCmd} package -DskipTests -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.kubernetes.deploy=false -Dquarkus.native.container-runtime=podman   -s ./setting.xml"
 	// 	// sh "${mvnCmd} verify -Pnative -Dquarkus.container-image.build=false -Dquarkus.kubernetes.deploy=false -s ./setting.xml"
 	// 	// sh "${mvnCmd} package -DskipTests -Pnative -Dquarkus.container-image.build=true -Dquarkus.kubernetes.deploy=false -s ./setting.xml"
