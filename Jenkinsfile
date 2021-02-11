@@ -27,12 +27,10 @@ node('maven') {
 				openshift.selector("secret", [ "app.kubernetes.io/name": appName ]).delete()
 			}
 		}
-
 	}
 
 	stage('Checkout Source') {
-		// 注意：Checkoutするブランチは"master"で固定されています
-		// checkout scm
+	
 		git branch: 'main', url: 'https://github.com/rhnkoike/quarkus-rh-app.git'
 	}
 
@@ -41,12 +39,6 @@ node('maven') {
 	def version    = getVersionFromPom("pom.xml")
 
 	stage('Build') {
-		// if(fileExists("./settings.xml")) {
-		// 	sh "cp ./settings.xml ~/.m2/"
-		// }
-		// if(fileExists("./settings-security.xml")) {
-		// 	sh "cp ./settings-security.xml ~/.m2/"
-		// }
 
 		echo "Building version ${version}"
 		sh "${mvnCmd} clean compile "
@@ -54,44 +46,38 @@ node('maven') {
 
 	stage('Tests') {
 
-		// Prepare Test - DB start
-		// openshift.withCluster() {
-		// 	openshift.withProject(devPrj) {
-		// 	    openshift.newApp("postgresql-ephemeral",
-		// 						"-p DATABASE_SERVICE_NAME=postgresql",
-		// 						"-p POSTGRESQL_DATABASE=quarkus_test",
-		// 						"-p POSTGRESQL_USER=quarkus_test",
-		// 						"-p POSTGRESQL_PASSWORD=quarkus_test",
-		// 						"-l app.kubernetes.io/name=${appName}"
-		// 		)
-		// 	}
-		// }
-
 		echo "Unit Tests"
 		sh "${mvnCmd} test"
 	}
 
 	def newTag = "dev-${version}"
 
-
 	stage('Build Image') {
 		
 		echo "Deploy image ${newTag}"
-		
-		sh "${mvnCmd} package -DskipTests 
+
+		// JVMモードのコンテナイメージを生成してレジストリにPush
+		sh "${mvnCmd} package -DskipTests 				
+					-Dquarkus.container-image.build=true
 					-Dquarkus.kubernetes.deploy=false"
 
+		// Nativeモードのコンテナイメージを生成してレジストリにPush(Nativeビルダコンテナ使用)
+		/*
         sh "${mvnCmd} package -DskipTests 
 					-Pnative 
 					-Dquarkus.native.container-build=true 
 					-Dquarkus.container-image.build=true 
 					-Dquarkus.kubernetes.deploy=false 
 					-Dquarkus.native.container-runtime=podman "
+		*/
 
+		// Nativeモードのコンテナイメージを生成してテスト、レジストリにPush(ローカルGraalVM使用)
+		/*
 		sh "${mvnCmd} verify 
 					-Pnative 
 					-Dquarkus.container-image.build=false 
 					-Dquarkus.kubernetes.deploy=false"
+		*/
 	}
 }
 
