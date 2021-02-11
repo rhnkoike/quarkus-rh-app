@@ -57,26 +57,24 @@ node('maven') {
 		echo "Deploy image ${newTag}"
 
 		// JVMモードのコンテナイメージを生成してレジストリにPush
-		sh '''${mvnCmd} package -DskipTests 				
-					-Dquarkus.container-image.build=true
-					-Dquarkus.kubernetes.deploy=false'''
+		sh "${mvnCmd} package -DskipTests -Dquarkus.container-image.build=true -Dquarkus.kubernetes.deploy=false"
 
 		// Nativeモードのコンテナイメージを生成してレジストリにPush(Nativeビルダコンテナ使用)
 		/*
-        sh "${mvnCmd} package -DskipTests 
+        sh '''${mvnCmd} package -DskipTests 
 					-Pnative 
 					-Dquarkus.native.container-build=true 
 					-Dquarkus.container-image.build=true 
 					-Dquarkus.kubernetes.deploy=false 
-					-Dquarkus.native.container-runtime=podman "
+					-Dquarkus.native.container-runtime=podman '''
 		*/
 
 		// Nativeモードのコンテナイメージを生成してテスト、レジストリにPush(ローカルGraalVM使用)
 		/*
-		sh "${mvnCmd} verify 
+		sh '''${mvnCmd} verify 
 					-Pnative 
 					-Dquarkus.container-image.build=false 
-					-Dquarkus.kubernetes.deploy=false"
+					-Dquarkus.kubernetes.deploy=false'''
 		*/
 	}
 }
