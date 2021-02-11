@@ -57,11 +57,7 @@ node('maven') {
 		echo "Deploy image ${newTag}"
 
 		// JVMモードのコンテナイメージを生成してレジストリにPush
-		sh """
-			${mvnCmd} package -DskipTests 
-					-Dquarkus.container-image.build=true 
-					-Dquarkus.kubernetes.deploy=false
-			"""
+		sh "${mvnCmd} package -DskipTests -Dquarkus.container-image.build=true -Dquarkus.kubernetes.deploy=false"
 
 		// Nativeモードのコンテナイメージを生成してレジストリにPush(Nativeビルダコンテナ使用)
 		/*
